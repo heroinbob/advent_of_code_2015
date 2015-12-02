@@ -35,7 +35,7 @@ module AdventOfCode
     # Calculate the amount of ribbon required to wrap the perimeter of the
     # smallest face on the package.
     def ribbon_length
-      2 * sizes[0] + 2 * sizes[1]
+      2 * (length + width)
     end
 
     # Calculate the length required for the bow, which is equal to the volume
