@@ -14,8 +14,16 @@ defmodule Advent.Day6 do
     Enum.reduce(instructions, Grid.new, performer)
   end
 
+  # Answer is 377891!
   def lit_count do
-    light! |> Enum.count(fn{_, status} -> status end)
+    light! |> Enum.count(fn{_, state} -> state > 0 end)
+  end
+
+  # Answer is 14110788!
+  def lumens do
+    light!
+    |> Dict.values
+    |> Enum.reduce(0, fn(value, acc) -> value + acc end)
   end
 
   def perform({"on", ranges}, grid) do
@@ -31,7 +39,7 @@ defmodule Advent.Day6 do
   end
 
   def on(grid, [coord | tail]) do
-    Grid.update(grid, coord, true) |> on(tail)
+    Grid.increase(grid, coord) |> on(tail)
   end
 
   def on(grid, []) do
@@ -39,7 +47,7 @@ defmodule Advent.Day6 do
   end
 
   def off(grid, [coord | tail]) do
-    Grid.delete(grid, coord) |> off(tail)
+    Grid.decrease(grid, coord) |> off(tail)
   end
 
   def off(grid, []) do

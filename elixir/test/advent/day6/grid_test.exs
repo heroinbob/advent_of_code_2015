@@ -3,30 +3,36 @@ defmodule Advent.Day6.GridTest do
 
   alias Advent.Day6.Grid
 
-  test "new/2 when size is 3 creates a 2x2 grid with 3 rows and columns" do
-    expected = [[0,0,0],[0,0,0],[0,0,0]]
-    assert(Grid.new(3, 0) == expected)
+  test "new/0 returns a new dict" do
+    assert Grid.new == %{}
   end
 
-  test "value/2 returns the correct value for the grid and coords" do
-    grid = [[0,0,0],[0,0,1],[0,0,0]]
-    assert(Grid.value(grid, {2, 1}) == 1)
-    assert(Grid.value(grid, {0, 0}) == 0)
-    assert(Grid.value(grid, {2, 2}) == 0)
+  test "value/2 returns the value at coords, or 0 if not set" do
+    assert Grid.value(%{}, {1, 1}) == 0
+    assert Grid.value(%{"1,1" => 5}, {1, 1}) == 5
   end
 
-  test "update/3 sets the value at the specified coords" do
-    grid = [[0,0,0],[0,0,0],[0,0,0]]
+  test "increase/2 increases value at coords by 1" do
+    assert Grid.increase(%{"7,7" => 1}, {7, 7}) == %{"7,7" => 2}
+    assert Grid.increase(%{}, {7, 7}) == %{"7,7" => 1}
+  end
 
-    assert(Grid.update(grid, {0, 0}, 1) == [[1,0,0],[0,0,0],[0,0,0]])
-    assert(Grid.update(grid, {1, 1}, 1) == [[0,0,0],[0,1,0],[0,0,0]])
-    assert(Grid.update(grid, {2, 2}, 1) == [[0,0,0],[0,0,0],[0,0,1]])
+  test "decrease/2 decreases coord by 1, min 0" do
+    assert Grid.decrease(%{"1,1" => 2}, {1, 1}) == %{"1,1" => 1}
+    assert Grid.decrease(%{}, {1, 1}) == %{"1,1" => 0}
+    assert Grid.decrease(%{"1,1" => 0}, {1, 1}) == %{"1,1" => 0}
   end
 
   test "toggle/2 turns on the light when off" do
-    grid = [[false, false], [true, true]]
+    assert Grid.toggle(%{}, {1, 1}) == %{"1,1" => 2}
+  end
 
-    assert(Grid.toggle(grid, {0, 0}) == [[true, false], [true, true]])
-    assert(Grid.toggle(grid, {1, 1}) == [[false, false], [true, false]])
+  test "toggle/2 turns off the light when on" do
+    assert Grid.toggle(%{}, {1, 1}) == %{"1,1" => 2}
+  end
+
+  test "increment/2 increments the value by amount, accounting for nil" do
+    assert Grid.increment(1, 10) == 11
+    assert Grid.increment(nil, 5) == 5
   end
 end
