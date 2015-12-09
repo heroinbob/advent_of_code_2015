@@ -1,23 +1,23 @@
 defmodule Advent.Day6.Grid do
-  def new(size, value \\ false) do
-    Enum.to_list(1..size) |> Enum.map(fn(_) -> new_row(size, value) end)
+  def new do
+    %{}
   end
 
-  def new_row(size, value) do
-    Enum.to_list(1..size) |> Enum.map(fn(_) -> value end)
+  def update(grid, coord, value) do
+    Dict.put(grid, key(coord), value)
   end
 
-  def value(grid, {x, y}) do
-    Enum.at(grid, y) |> Enum.at(x)
-  end
-
-  def update(grid, {x, y}, value) do
-    row = Enum.at(grid, y)
-    updated_row = List.replace_at(row, x, value)
-    List.replace_at(grid, y, updated_row)
+  def delete(grid, coord) do
+    Dict.delete(grid, key(coord))
   end
 
   def toggle(grid, coord) do
-    update(grid, coord, !value(grid, coord))
+    Dict.get_and_update(grid, key(coord), fn(value) -> {value, !value} end)
+    |> Tuple.to_list
+    |> List.last
+  end
+
+  def key({x, y}) do
+    "#{x},#{y}"
   end
 end
