@@ -24,10 +24,10 @@ defmodule Advent.Day4 do
   Your puzzle input is bgvyzdsv.
 
   Example:
-    iex> Advent.Day4.mine_for("abcdef")
+    iex > Advent.Day4.mine_for("abcdef")
     {609043, "000001DBBFA3A5C83A2D506429C7B00E"}
 
-    iex> Advent.Day4.mine_for("pqrstuv")
+    iex > Advent.Day4.mine_for("pqrstuv")
     {1048970, "000006136EF2FF3B291C85725F17325C"}
 
   --- Part Two ---
@@ -48,7 +48,7 @@ defmodule Advent.Day4 do
   Calculate the MD5 Hash in hexadecimal given the value.
 
   Example:
-    iex> Advent.Day4.md5("abcdef609043")
+    iex > Advent.Day4.md5("abcdef609043")
     "000001DBBFA3A5C83A2D506429C7B00E"
   """
   def md5(key) do
