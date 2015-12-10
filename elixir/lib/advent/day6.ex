@@ -1,10 +1,10 @@
 defmodule Advent.Day6 do
   alias Advent.Day6.Command
   alias Advent.Day6.Grid
-  import Advent.File
+  alias Advent.File
 
   def instructions do
-    "day6.txt" |> split_file |> Command.parse
+    "day6.txt" |> File.split |> Command.parse
   end
 
   def light! do
@@ -63,7 +63,7 @@ defmodule Advent.Day6 do
   @doc """
   Returns all possible combinations of the ranges.
 
-    iex> Advent.Day6.mix(1..3, 4..6)
+    iex> Advent.Day6.mix({1..3, 4..6})
     [{1, 4}, {1, 5}, {1, 6}, {2, 4}, {2, 5}, {2, 6}, {3, 4}, {3, 5}, {3, 6}]
   """
   def mix({range1, range2}) do
