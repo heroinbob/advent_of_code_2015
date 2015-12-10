@@ -70,9 +70,10 @@ defmodule Advent.Day7 do
     commands |> sorter_type.sort
   end
 
-  def compute(commands) do
+  def compute(commands, override \\ {:none}) do
     commands
     |> Enum.drop(1)
+    |> override_signal(override)
     |> Enum.reduce(
       HashDict.new,
       fn(command, hash) ->
@@ -84,16 +85,30 @@ defmodule Advent.Day7 do
 
   @doc """
   Return the signal that will be sent on wire A.
-  iex> Advent.Day7.signal_a
+  iex> Advent.Day7.sorted_commands |> Advent.Day7.a_signal
   16076
+
+  iex> Advent.Day7.sorted_commands |> Advent.Day7.a_signal({:start_with, 16076})
+  2797
   """
-  def a_signal do
-    commands = sorted_commands
-    {:ASSIGN, key, :a} = commands |> List.first
-    commands |> compute |> HashDict.get(key)
+  def a_signal(commands, override \\ {:none}) do
+    key = commands |> source_key_for_a
+    commands |> compute(override) |> HashDict.get(key)
   end
 
   def store(hash, key, value) do
     HashDict.put(hash, key, value)
+  end
+
+  def source_key_for_a(commands) do
+    commands |> List.first |> Tuple.to_list |> Enum.at(1)
+  end
+
+  def override_signal(commands, {:start_with, signal}) do
+    commands |> List.replace_at(0, {:ASSIGN, signal, :b})
+  end
+
+  def override_signal(commands, {:none}) do
+    commands
   end
 end
