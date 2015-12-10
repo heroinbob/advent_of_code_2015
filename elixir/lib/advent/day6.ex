@@ -1,12 +1,10 @@
 defmodule Advent.Day6 do
   alias Advent.Day6.Command
   alias Advent.Day6.Grid
+  import Advent.File
 
   def instructions do
-    File.read!("data/day6.txt")
-    |> String.split("\n")
-    |> Enum.reject(fn(v) -> v == "" end)
-    |> Command.parse
+    "day6.txt" |> split_file |> Command.parse
   end
 
   def light! do
