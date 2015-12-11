@@ -5,7 +5,7 @@ defmodule Advent.File do
 
   def chars(filename) do
     {:ok, file} = File.open("data/#{filename}")
-    data = IO.read file, :all
+    data = IO.read(file, :all) |> String.strip
     File.close(file)
 
     data

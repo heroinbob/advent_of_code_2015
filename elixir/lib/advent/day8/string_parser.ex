@@ -3,17 +3,23 @@ defmodule Advent.Day8.StringParser do
     str |> String.replace(value, "")
   end
 
-  def length_without(str, value) do
-    str |> remove(value) |> String.length
+  def bookend(str, value) do
+    "#{value}#{str}#{value}"
   end
 
-  def print_length(str) do
+  def decode(str) do
     str
     |> String.replace(~s(\\"), ~s("))
     |> String.replace(~s(\\\\), ~s(\\))
     |> String.replace(~r/\\x[a-f0-9]{2}/, ~s(_))
     |> remove(~r/^"|"\n"|"$/)
-    |> remove("\n")
-    |> String.length
+  end
+
+  def encode(str) do
+    str
+    |> String.replace("\\", "\\\\")
+    |> String.replace(~s("), ~s(\\"))
+    |> String.replace("\n", ~s("\n"))
+    |> bookend(~s("))
   end
 end
