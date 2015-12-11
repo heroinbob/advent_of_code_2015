@@ -4,7 +4,7 @@ defmodule Advent.Day6 do
   alias Advent.File
 
   def instructions do
-    "day6.txt" |> File.split |> Command.parse
+    "day6.txt" |> File.lines |> Command.parse
   end
 
   def light! do

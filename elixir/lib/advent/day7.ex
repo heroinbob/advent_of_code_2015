@@ -63,7 +63,7 @@ defmodule Advent.Day7 do
   input), what signal is ultimately provided to wire a?
   """
   def commands do
-    File.split("day7.txt") |> Command.parse
+    File.lines("day7.txt") |> Command.parse
   end
 
   def sorted_commands(sorter_type \\ Sorter) do
