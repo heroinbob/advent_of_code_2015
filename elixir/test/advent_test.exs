@@ -8,4 +8,5 @@ defmodule AdventTest do
   doctest Advent.Day6
   doctest Advent.Day7
   doctest Advent.Day8
+  doctest Advent.Day9
 end

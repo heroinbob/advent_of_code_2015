@@ -1,5 +1,6 @@
 defmodule Advent.Day9 do
   alias Advent.File
+  alias Advent.Day9.Router
 
   # Store places and distances
   # pull out unique locations (as starting points)
@@ -47,58 +48,27 @@ defmodule Advent.Day9 do
     "day9.txt" |> File.lines
   end
 
-  def known_distances(strings) do
-    strings |> Enum.map(fn(str) -> to_known_distance(str) end)
-  end
+  @doc """
+  Returns the shortest path!
+    iex> Advent.Day9.test_input |> Advent.Day9.shortest_path
+    {"London->Dublin->Belfast", 605}
 
-  def to_known_distance(str) do
-    pieces = str |> String.split(" ")
+    iex > Advent.Day9.input |> Advent.Day9.shortest_path
+    {"Arbre->Tambi->Snowdin->Faerun->Straylight->Norrath->AlphaCentauri->Tristram", 141}
+  """
+  def shortest_path(str) do
+    map = str |> Router.parse_map
+    routes = map |> Router.routes
 
-    pieces
-    |> List.replace_at(length(pieces) - 1, List.last(pieces) |> String.to_integer)
-    |> Enum.reject(fn(piece) -> piece == "to" || piece == "=" end) |> List.to_tuple
-  end
-
-  def uniq_locations(distances) do
-    distances
-    |> Enum.flat_map(fn({start, stop, _dist}) -> [start, stop] end)
-    |> Enum.uniq
-  end
-
-  def go(data) do
-    distances = data |> known_distances
-    locations = distances |> uniq_locations
-    store = HashDict.new
-
-    get_paths(store, distances, locations)
-  end
-
-  def get_paths(hash, distances, [current_location | other_locations], path \\ [], total \\ 0) do
-    path = path |> List.insert_at(Enum.count(path), current_location)
-
-  end
-
-  def matrixify([place | tail], max, matrix \\ []) do
-    matrix = matrix |> List.insert_at(Enum.count(matrix), Enum.concat([place], tail))
-    matrix_size = matrix |> Enum.count
-
-    cond do
-      matrix_size == max ->
-        matrix
-
-      matrix_size < max ->
-        matrixify(Enum.concat(tail, [place]), max, matrix)
-    end
-  end
-
-  def combos_for(current, [next | tail], combos \\ [], count \\ 0) do
-    combos = combos |> List.insert_at(count, Enum.concat([current, next], tail))
-    count = count + 1
-
-    if count == Enum.count(tail) + 2 do
-      combos
-    else
-      combos_for(current, Enum.concat(tail, [next]), combos, count)
-    end
+    Enum.reduce(
+      routes,
+      HashDict.new,
+      fn(stops, hash) ->
+        distance = stops |> Router.calculate_route_distance(map)
+        HashDict.put(hash, Enum.join(stops, "->"), distance)
+      end
+    )
+    |> Enum.sort(fn({_a_key, a_dist}, {_b_key, b_dist}) -> a_dist < b_dist end)
+    |> List.first
   end
 end

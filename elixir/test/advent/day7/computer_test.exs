@@ -3,31 +3,6 @@ defmodule Advent.Day7.ComputerTest do
   use Bitwise
   alias Advent.Day7.Computer
 
-  test "exec/1 should execute the specified commands" do
-    commands = [
-      #{:ASSIGN, 123, :x},
-      #{:ASSIGN, 456, :y},
-      #{:AND, {:x, :y}, :d},
-      #{:OR, {:x, :y}, :e},
-      #{:LSHIFT, {:x, 2}, :f},
-      #{:RSHIFT {:y, 2}, :g},
-      #{:NOT, :x, :h},
-      #{:NOT, :y, :i}
-    ]
-    expected = [
-      d: 72,
-      e: 507,
-      f: 492,
-      g: 114,
-      h: 65412,
-      i: 65079,
-      x: 123,
-      y: 456
-    ]
-
-    #assert Computer.exec(commands) == expected
-  end
-
   test "compute/2 supports assignment to a number" do
     assert Computer.compute({:ASSIGN, 19138, :b}, HashDict.new) == 19138
   end
