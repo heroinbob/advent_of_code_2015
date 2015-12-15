@@ -55,20 +55,18 @@ defmodule Advent.Day9 do
 
     iex > Advent.Day9.input |> Advent.Day9.shortest_path
     {"Arbre->Tambi->Snowdin->Faerun->Straylight->Norrath->AlphaCentauri->Tristram", 141}
-  """
-  def shortest_path(str) do
-    map = str |> Router.parse_map
-    routes = map |> Router.routes
 
-    Enum.reduce(
-      routes,
-      HashDict.new,
-      fn(stops, hash) ->
-        distance = stops |> Router.calculate_route_distance(map)
-        HashDict.put(hash, Enum.join(stops, "->"), distance)
-      end
-    )
-    |> Enum.sort(fn({_a_key, a_dist}, {_b_key, b_dist}) -> a_dist < b_dist end)
-    |> List.first
+    iex> Advent.Day9.test_input |> Advent.Day9.longest_path
+    {"Belfast->London->Dublin", 982}
+
+    iex > Advent.Day9.input |> Advent.Day9.longest_path
+    {"Faerun->Norrath->Tambi->Straylight->Snowdin->Tristram->Arbre->AlphaCentauri", 736}
+  """
+  def shortest_path(input) do
+    Router.shortest_path(input)
+  end
+
+  def longest_path(input) do
+    Router.longest_path(input)
   end
 end

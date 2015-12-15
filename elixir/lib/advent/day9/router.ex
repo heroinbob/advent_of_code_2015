@@ -35,9 +35,38 @@ defmodule Advent.Day9.Router do
     map |> uniq_locations |> Combination.all
   end
 
-  @doc """
-  Returns a tuple with {stop1, stop2, distance} based on the string data.
-  """
+  def shortest_path(input) do
+    path_length(input, asc_sorter)
+  end
+
+  def longest_path(input) do
+    path_length(input, desc_sorter)
+  end
+
+  defp path_length(str, sorter_fn) do
+    map = str |> parse_map
+    routes = map |> routes
+
+    Enum.reduce(
+      routes,
+      HashDict.new,
+      fn(stops, hash) ->
+        distance = stops |> calculate_route_distance(map)
+        HashDict.put(hash, Enum.join(stops, "->"), distance)
+      end
+    )
+    |> Enum.sort(sorter_fn)
+    |> List.first
+  end
+
+  defp desc_sorter do
+    fn({_a_key, a_dist}, {_b_key, b_dist}) -> a_dist > b_dist end
+  end
+
+  defp asc_sorter do
+    fn({_a_key, a_dist}, {_b_key, b_dist}) -> a_dist < b_dist end
+  end
+
   defp to_distance(str) do
     pieces = str |> String.split(" ")
     index = (pieces |> length) - 1
@@ -48,15 +77,12 @@ defmodule Advent.Day9.Router do
     |> Enum.reject(fn(piece) -> piece == "to" || piece == "=" end) |> List.to_tuple
   end
 
-  @doc """
-  Return true if current and next are in the values.
-  """
   defp match?(values, current, [next | _rest]) do
     values |> Enum.any?(fn(v) -> v == current end) &&
       values |> Enum.any?(fn(v) -> v == next end)
   end
 
-  defp match?(values, current, []) do
+  defp match?(_values, _current, []) do
     false # All done, return false and move on.
   end
 
